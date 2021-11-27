@@ -64,6 +64,77 @@ def fit(model, optimizer, data_loader, phase='training', volatile=False):
     return loss, accuracy
 
 
+def fit_vgg(model, optimizer, data_loader, phase='training', volatile=False):
+    if phase == 'training':
+        model.train()
+    if phase == 'validation':
+        model.eval()
+        volatile = True
+    running_loss = 0.0
+    running_correct = 0
+    for batch_idx, (data, target) in enumerate(data_loader):
+        if torch.cuda.is_available():
+            data, target = data.cuda(), target.cuda()
+        data, target = Variable(data, volatile), Variable(target)
+        if phase == 'training':
+            optimizer.zero_grad()
+        output = model(data)
+        loss = F.cross_entropy(output, target)
+        loss_tmp = F.cross_entropy(output, target, size_average=False)
+        if len(list(loss_tmp.data.size())) != 0:  # cggos 20211120
+            running_loss += loss_tmp.data[0]
+        else:
+            running_loss += loss_tmp.data.item()
+        preds = output.data.max(dim=1, keepdim=True)[1]
+        running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()
+        if phase == 'training':
+            loss.backward()
+            optimizer.step()
+
+    loss = running_loss / len(data_loader.dataset)
+    accuracy = 100. * running_correct / len(data_loader.dataset)
+
+    print(
+        f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')
+    return loss, accuracy
+
+
+def fit_numpy(model, optimizer, data_loader, phase='training', volatile=False):
+    if phase == 'training':
+        model.train()
+    if phase == 'validation':
+        model.eval()
+        volatile = True
+    running_loss = 0.0
+    running_correct = 0
+    for batch_idx, (data, target) in enumerate(data_loader):
+        if torch.cuda.is_available():
+            data, target = data.cuda(), target.cuda()
+        data, target = Variable(data, volatile), Variable(target)
+        if phase == 'training':
+            optimizer.zero_grad()
+        data = data.view(data.size(0), -1)
+        output = model(data)
+        loss = F.cross_entropy(output, target)
+        loss_tmp = F.cross_entropy(output, target, size_average=False)
+        if len(list(loss_tmp.data.size())) != 0:  # cggos 20211120
+            running_loss += loss_tmp.data[0]
+        else:
+            running_loss += loss_tmp.data.item()
+        preds = output.data.max(dim=1, keepdim=True)[1]
+        running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()
+        if phase == 'training':
+            loss.backward()
+            optimizer.step()
+
+    loss = running_loss / len(data_loader.dataset)
+    accuracy = 100. * running_correct / len(data_loader.dataset)
+
+    print(
+        f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')
+    return loss, accuracy
+
+
 def create_model():
     model_ft = models.resnet18(pretrained=True)
     num_ftrs = model_ft.fc.in_features
