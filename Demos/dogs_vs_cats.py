@@ -56,6 +56,8 @@ def main():
     no_of_images = len(files)
     print(f'Total no of images {no_of_images}')
 
+    np.random.seed()
+
     shuffle = np.random.permutation(no_of_images)
 
     for i in shuffle[:2000]:
@@ -83,7 +85,8 @@ def main():
     print(train.class_to_idx)  # The index is 0,1 according to the order.
     print(train.imgs[:5])  # Returns the path of the image obtained from all folders and their categories
 
-    utils.imshow(train[50][0])
+    img_tmp = utils.transform_invert(train[50][0], simple_transform)
+    plt.imshow(img_tmp)
     plt.show()
 
     print("\nCreate data generators\n")
