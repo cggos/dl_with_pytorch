@@ -6,12 +6,12 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-import utils
+from Demos.common import utils
 
 if __name__ == "__main__":
     torch.manual_seed(1)
 
-    path_img = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../images/lena.bmp")
+    path_img = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../images/lena.bmp")
     img = Image.open(path_img).convert('RGB')  # 0~255
 
     img_transform = transforms.Compose([transforms.ToTensor()])

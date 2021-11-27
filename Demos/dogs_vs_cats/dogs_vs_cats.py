@@ -16,7 +16,7 @@ from torch.optim import lr_scheduler
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 
-import utils
+from Demos.common import utils
 import network_model
 
 
