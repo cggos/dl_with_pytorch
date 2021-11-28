@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+project(demo00)
+
+set(Torch_DIR "/home/cg/projects/3rdparty/pytorch/torch/lib/tmp_install/share/cmake/Torch/")
+find_package(Torch REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
+add_executable(demo00 demo00.cpp)
+target_link_libraries(demo00 "${TORCH_LIBRARIES}")
+set_property(TARGET demo00 PROPERTY CXX_STANDARD 14)
