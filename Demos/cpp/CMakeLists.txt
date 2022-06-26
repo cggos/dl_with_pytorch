@@ -11,3 +11,7 @@ message("++ TORCH_LIBRARIES: " ${TORCH_LIBRARIES})
 add_executable(demo00 demo00.cpp)
 target_link_libraries(demo00 "${TORCH_LIBRARIES}")
 set_property(TARGET demo00 PROPERTY CXX_STANDARD 14)
+
+add_executable(demo01 demo01.cpp)
+target_link_libraries(demo01 "${TORCH_LIBRARIES}")
+set_property(TARGET demo01 PROPERTY CXX_STANDARD 14)
