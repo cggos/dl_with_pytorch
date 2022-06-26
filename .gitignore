@@ -3,5 +3,5 @@
 __pycache__/
 *.gv*
 *.pt
-modelviz.pdf
+*.out*
 build/

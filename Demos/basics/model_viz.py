@@ -1,14 +1,21 @@
+#!/usr/bin/env python
+# -*-coding:utf-8 -*-
+"""
+@Ref
+    * https://zhuanlan.zhihu.com/p/232348083
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchviz import make_dot
 
-from Demos.dogs_vs_cats.dogs_vs_cats import network_model
+from Demos.dogs_vs_cats import network_model
 
 
-class ModelViz(nn.Module):
+class ModelTest(nn.Module):
     def __init__(self):
-        super(ModelViz, self).__init__()
+        super(ModelTest, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, 3, 1, padding=1)
         self.bn1 = nn.BatchNorm2d(16)
         self.conv2 = nn.Conv2d(16, 64, 3, 1, padding=1)
@@ -27,16 +34,18 @@ class ModelViz(nn.Module):
 
 
 if __name__ == "__main__":
-    model = network_model.ModelViz()
+    model0 = ModelTest()
+    model1 = network_model.Net()
 
-    out = model(torch.rand(1, 3, 4, 4))
+    data_in = torch.rand(1, 3, 4, 4)
+    out0 = model0(data_in)
 
-    print(f'out:\n {out}')
+    print(f'model0 out:\n {out0}')
 
     method = 0
     if method == 0:
-        torch.save(network_model.Net(), "../modelviz.pt")  # 生成一个pt文件，然后打开 netron 进行可视化
+        torch.save(model0, "modelviz.out.pt")  # netron
     elif method == 1:
-        g = make_dot(out)  # 使用graphviz进行可视化
-        # g.render('modelviz', view=True)
-        g.view()
+        g = make_dot(out0)  # graphviz
+        g.render('modelviz.out', view=True)
+        # g.view()
