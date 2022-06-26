@@ -15,3 +15,7 @@ set_property(TARGET demo00 PROPERTY CXX_STANDARD 14)
 add_executable(demo01 demo01.cpp)
 target_link_libraries(demo01 "${TORCH_LIBRARIES}")
 set_property(TARGET demo01 PROPERTY CXX_STANDARD 14)
+
+add_executable(lenet5_test lenet5_test.cpp)
+target_link_libraries(lenet5_test "${TORCH_LIBRARIES}")
+set_property(TARGET lenet5_test PROPERTY CXX_STANDARD 14)
